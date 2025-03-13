@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,12 +123,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-#Sửa lỗi chỗ này, thêm Delisora để máy nhận diện
+STATIC_URL = '/static/'  # Thêm dấu "/"
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'app' ,'static')
+    os.path.join(BASE_DIR, 'app', 'static')  # Đúng rồi, giữ nguyên
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Dùng để collectstatic
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -137,7 +138,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #trỏ admin về static(quan trọng)
 
 MEDIA_URL = '/images/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'app/static/images')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 SESSION_COOKIE_NAME = 'user_sessionid'
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -149,6 +151,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'vinhnq234112e@st.uel.edu.vn'
 EMAIL_HOST_PASSWORD = 'gkii ybhb drkc sicm'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 
 
