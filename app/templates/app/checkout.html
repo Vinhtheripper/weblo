@@ -1,0 +1,114 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content_checkout %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Form Section -->
+        <div class="col-lg-5">
+            <div class="box-element p-4 shadow rounded" id="form-wrapper">
+                <h4 class="mb-3">Checkout</h4>
+                <form id="form" method="post" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <div id="user-info">
+                        {% if user.is_authenticated %}
+                            <div class="form-group mb-3">
+                                <input required class="form-control" type="text" name="name" placeholder="Name.."
+                                       value="{{ initial_data.name|default:user.username }}" readonly>
+                            </div>
+                            <div class="form-group mb-3">
+                                <input required class="form-control" type="email" name="email" placeholder="Email.."
+                                       value="{{ initial_data.email|default:user.email }}" readonly>
+                            </div>
+                        {% else %}
+                            <div class="form-group mb-3">
+                                <input required class="form-control" type="text" name="guest_name" placeholder="Name.."
+                                       value="{{ initial_data.name|default:'' }}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <input required class="form-control" type="email" name="guest_email" placeholder="Email.."
+                                       value="{{ initial_data.email|default:'' }}">
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div id="shipping-info">
+                        <hr>
+                        <br>
+                        <h5>Shipping Information</h5>
+                        <br>
+                        <div class="form-group mb-3">
+                            <input class="form-control" type="text" name="address" placeholder="Address.."
+                                   value="{{ initial_data.address|default:'' }}">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input class="form-control" type="text" name="city" placeholder="City.."
+                                   value="{{ initial_data.city|default:'' }}">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input class="form-control" type="text" name="state" placeholder="State.."
+                                   value="{{ initial_data.state|default:'' }}">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input class="form-control" type="text" name="mobile" placeholder="Phone Number.."
+                                   value="{{ initial_data.mobile|default:'' }}">
+                        </div>
+
+
+                    </div>
+                    <button id="form-button" class="btn btn-dark btn-block mt-3" type="submit"
+                            {% if order.get_cart_items == 0 %}disabled{% endif %}>Continue</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-7">
+            <div class="box-element p-4 shadow rounded">
+                <a class="btn btn-outline-dark mb-3" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+                <h4>Order Summary</h4>
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Image</th>
+                            <th style="width: 40%;">Product Name</th>
+                            <th style="width: 20%;">Price</th>
+                            <th style="width: 20%;">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        {% if item.combo %}
+                        <tr>
+                            <td><img class="cart-product-img" src="{{ item.combo.imageURL }}" alt="{{ item.combo.name }}" ></td>
+                            <td>{{ item.combo.name }}</td>
+                            <td>${{ item.combo.get_combo_price }}</td>
+                            <td>{% if item.quantity >= 1 %}
+                                    {{ item.quantity }}
+                                {% endif %}</td>
+                        </tr>
+                        {% elif item.product %}
+                        <tr>
+                            <td><img class="cart-product-img" src="{{ item.product.imageURL }}" alt="{{ item.product.name }}" ></td>
+                            <td>{{ item.product.name }}</td>
+                            <td>${{ item.product.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                        </tr>
+                        {% endif %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No items in cart</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h5 class="mt-3">Items: {{ order.get_cart_items|default:0 }}</h5>
+                <h5>Sale: -${{ order.get_sale_discount_total|default:0 }}</h5>
+                <h5>Endow: -${{ order.get_endow_discount_total|default:0 }}</h5>
+                <h5>Total: ${{ order.get_cart_total|default:0 }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content_checkout %}

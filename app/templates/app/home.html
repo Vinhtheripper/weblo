@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+{% load static %}
+<div class="container">
+  {% block content %}
+  <div class="container__left">
+    <h1>Enjoy Your Meals</h1>
+    <div class="container__btn">
+    <a href="/menu">
+        <button class="btn">BUY NOW</button>
+    </a>
+</div>
+  </div>
+  <div class="container__right">
+    <div class="images">
+      <img src="{% static 'app/images/anh1.jpg' %}" alt="tent-1" class="tent-1" />
+      <img src="{% static 'app/images/anh3.jpg' %}" alt="tent-2" class="tent-2" />
+    </div>
+    <div class="content" >
+      <h4>Food | Drink</h4>
+      <h2>DELISORA</h2>
+      <h3>Healthy, Happy, Naturally snappy!</h3>
+      <p>
+        With the mission of bringing quality meals to customers, we are always committed to product quality as well as the freshest ingredients, and committed to bringing you the best experience.
+      </p>
+    </div>
+  </div>
+
+  <a href="{% url 'login' %}" class="location">
+    <span><i class="ri-map-pin-2-fill"></i></span>
+    REGISTER HERE!
+  </a>
+
+
+</div>
+<link rel="stylesheet" href="{% static 'app/css/home.css' %}">
+{% endblock %}

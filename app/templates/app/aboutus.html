@@ -1,0 +1,72 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<div id="wrapper" class="divided">
+
+    <!-- One -->
+    <section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
+        <div class="content"></div>
+        <div class="image">
+            <img src="{% static 'app/images/banner.jpg' %}" alt="" />
+        </div>
+    </section>
+
+    <!-- Two -->
+    <section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in" id="first">
+        <div class="content">
+            <h2>About us</h2>
+            <p>With a young, dynamic team, combined with experienced nutritionists and chefs, we always try to bring the best experiences to customers. Along with that is the task of improving community health and contributing to the development of society</p>
+            <ul class="actions stacked">
+                <li><a href="#second" class="button">Learn More</a></li>
+            </ul>
+        </div>
+        <div class="image">
+            <img src="{% static 'app/images/spotlight01.jpg' %}" alt="" />
+        </div>
+    </section>
+
+    <!-- Three -->
+    <section class="spotlight style1 orient-left content-align-left image-position-center onscroll-image-fade-in" id="second">
+        <div class="content">
+            <h2>Vision and Mission</h2>
+            <p><strong>Vision:</strong> To become the leading platform for healthy food, providing a convenient shopping experience and the best nutrition for everyone.</p>
+            <p><strong>Mission:</strong> Providing clean, high-quality food, ensuring consumer health. Creating healthy eating habits, helping to improve quality of life. Applying technology to personalize customer experience and optimize the delivery process.</p>
+            <ul class="actions stacked">
+                <li><a href="#third" class="button">Contact</a></li>
+            </ul>
+        </div>
+        <div class="image">
+            <img src="{% static 'app/images/spotlight02.jpg' %}" alt="" />
+        </div>
+    </section>
+
+    <!-- Four -->
+    <section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in" id="third">
+        <div class="content">
+            <h2>Contact To Us</h2>
+            <p><strong>Email:</strong> quvinh1305@gmail.com</p>
+            <p><strong>Phone Number:</strong> 0919694180</p>
+            <p><strong>Address:</strong> 669 Đỗ Mười, Area 6, Thu Duc, Ho Chi Minh City</p>
+            <p>Or you can contact us via the social networks listed in the right corner </p>
+            <ul class="actions stacked">
+                <li><a href="{% url 'menu' %}" class="button">Buy Now</a></li>
+            </ul>
+        </div>
+        <div class="image">
+            <img src="{% static 'app/images/spotlight03.jpg' %}" alt="" />
+        </div>
+    </section>
+
+    <!-- Thank You Section -->
+    <div class="thank-you">
+        <hr>
+        <h2>Thank You!</h2>
+        <p class="signature">Quangvinh</p>
+        <hr>
+    </div>
+
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,147 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block cart_content %}
+<div class="main-content">
+    <div class="row" style="width: 100%;">
+        <div style="height: 60px;"></div>
+        <div class="content">
+
+        </div>
+        <div class="col-lg-12">
+            <div class="box-element">
+                <a class="btn btn-outline-dark" href="{% url 'menu' %}">&#x2190; Continue Shopping</a>
+                <br><br>
+                <table class="table">
+                    <tr>
+                        <th>
+                            <h5>Items: <strong>
+
+                                    {{ cartItems }}
+
+                            </strong></h5>
+                        </th>
+                        <th>
+                            <h5>Total: <strong>$
+                                    {{ cartTotal }}
+
+                            </strong></h5>
+                        </th>
+
+                        <th>
+                            <a style="float:right; margin:5px;" class="btn btn-success bg-dark" href="{% url 'checkout' %}">Checkout</a>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+
+            <br>
+            <div class="box-element">
+                <table class="table" style="width: 100%; border-collapse: collapse;">
+                    <tbody>
+                        {% for item in combo_items %}
+                        <tr>
+                            <td style="text-align: center;">
+                                <img src="{{ item.combo.imageURL }}" class="cart-product-img">
+                            </td>
+                            <td>{{ item.combo.name }}</td>
+                            <td style="text-align: center;">${{ item.combo.get_combo_price }}</td>
+
+                            <td style="text-align: center;">
+                                <!-- Nút Giảm -->
+                                <form method="POST" action="{% url 'update_item' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="comboId" value="{{ item.combo.id }}">
+                                    <input type="hidden" name="action" value="remove">
+                                    <button type="submit">-</button>
+                                </form>
+
+                                {{ item.quantity }}
+
+                                <!-- Nút Tăng -->
+                                <form method="POST" action="{% url 'update_item' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="comboId" value="{{ item.combo.id }}">
+                                    <input type="hidden" name="action" value="add">
+                                    <button type="submit">+</button>
+                                </form>
+                            </td>
+
+                            <td style="text-align: center;">
+                                {% if user.is_authenticated %}
+                                    ${{ item.get_total }}
+                                {% else %}
+                                    ${{ item.total_price }}
+                                {% endif %}
+                            </td>
+                            <!-- Nút Xóa -->
+                            <td style="text-align: center;">
+                                <form method="POST" action="{% url 'update_item' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="comboId" value="{{ item.combo.id }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <button type="submit">🗑</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for item in product_items %}
+                        <tr>
+                            <td style="text-align: center;"><img src="{{ item.product.imageURL }}" class="cart-product-img"></td>
+                            <td>{{ item.product.name }}</td>
+                            <td style="text-align: center;">${{ item.product.price }}</td>
+
+                            <td style="text-align: center;">
+                                <!-- Nút Giảm -->
+                                <form method="POST" action="{% url 'update_item' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="productId" value="{{ item.product.id }}">
+                                    <input type="hidden" name="action" value="remove">
+                                    <button type="submit">-</button>
+                                </form>
+
+                                {% if item.quantity >= 1 %}
+                                    {{ item.quantity }}
+                                {% endif %}
+
+                                <!-- Nút Tăng -->
+                                <form method="POST" action="{% url 'update_item' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="productId" value="{{ item.product.id }}">
+                                    <input type="hidden" name="action" value="add">
+                                    <button type="submit">+</button>
+                                </form>
+                            </td>
+                            <td style="text-align: center;">
+                                {% if user.is_authenticated %}
+                                    ${{ item.get_total }}
+                                {% else %}
+                                    ${{ item.total_price }}
+                                {% endif %}
+                            </td>
+                            <!-- Nút Xóa -->
+                            <td style="text-align: center;">
+                                <form method="POST" action="{% url 'update_item' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="productId" value="{{ item.product.id }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <button type="submit">🗑</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var user = "{{ user|default:'AnonymousUser' }}";
+</script>
+
+{% endblock %}

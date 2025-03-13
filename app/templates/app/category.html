@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<!-- CATEGORY PAGE -->
+
+<div id="menu_category" class="bg-white-100 py-12">
+    <div class="container mx-auto px-4">
+        <h1 class="text-center text-2xl font-bold mb-8 text-[#FFB7B2]">
+            {{ active_category|default:"Category" }} Products
+        </h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
+            {% for product in products %}
+                <a href="{% url 'detail' %}?id={{ product.id }}" class="block text-center bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all relative">
+                    <!-- Nhãn SALE -->
+                    {% if product.sale %}
+                        <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                            SALE
+                        </span>
+                    {% endif %}
+
+                    <div class="overflow-hidden rounded-lg">
+                        <img src="{{ product.imageURL }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg transform group-hover:scale-105 transition-all duration-300"/>
+                    </div>
+                    <h2 class="text-lg font-bold mt-4 text-black">
+                        {{ product.name }}
+                    </h2>
+                    <p class="text-sm text-gray-600">
+                        {{ product.detail }}
+                    </p>
+                </a>
+            {% empty %}
+                <p class="text-center text-gray-500 col-span-full">No products found in this category.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

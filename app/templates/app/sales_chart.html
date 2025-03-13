@@ -1,0 +1,10 @@
+{% extends 'app/base.html' %}
+{% block content %}
+    <h2>Sales Dashboard</h2>
+    <h3>Daily Sales Trend</h3>
+    {% if sales_chart %}
+        <img src="data:image/png;base64,{{ sales_chart }}" alt="Sales Chart">
+    {% else %}
+        <p>No Sales Data Available.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'app/css/contact.css' %}">
+<div style="height: 60px;"></div>
+<div class="content">
+  <div class="contact-container">
+    <div class="left-col">
+      <img class="image" src="{% static 'app/images/logocrop.png' %}" alt="Contact Image"/>
+    </div>
+
+    <div class="right-col">
+      <h1 class="title">Feel Free To Share Your Story</h1>
+
+      <form id="contact-form" method="post">
+        {% csrf_token %}
+
+        <label for="nickname">Your Nick Name</label>
+        <input type="text" id="nickname" name="nickname" placeholder="Your Nick Name" required>
+
+        <label for="message">Your Message</label>
+        <textarea rows="6" placeholder="Your Message" id="message" name="message" required></textarea>
+
+        <!-- Chọn số sao -->
+        <label for="rating">Your Rating</label>
+          <div class="rating">
+            <input type="radio" id="star5" name="rating" value="5" required/>
+            <label for="star5">★</label>
+
+            <input type="radio" id="star4" name="rating" value="4"/>
+            <label for="star4">★</label>
+
+            <input type="radio" id="star3" name="rating" value="3"/>
+            <label for="star3">★</label>
+
+            <input type="radio" id="star2" name="rating" value="2"/>
+            <label for="star2">★</label>
+
+            <input type="radio" id="star1" name="rating" value="1"/>
+            <label for="star1">★</label>
+          </div>
+
+
+        <button type="submit" id="submit" name="submit">Send</button>
+      </form>
+
+
+      <div id="error"></div>
+      <div id="success-msg"></div>
+    </div>
+  </div>
+
+  <!-- Phần hiển thị story dạng scroll ngang -->
+  <div class="story-container">
+  <h2>Customer Stories</h2>
+  <div class="story-scroll">
+    {% for msg in messages_list %}
+    <div class="story-card">
+      <h3>{{ msg.nickname }}</h3>
+      <p>{{ msg.message }}</p>
+      <p>Rating: {{ msg.rating }} ⭐</p>
+    </div>
+    {% empty %}
+    <p>Chưa có story nào được chia sẻ.</p>
+    {% endfor %}
+  </div>
+</div>
+
+</div>
+{% endblock content %}
