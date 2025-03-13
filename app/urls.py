@@ -5,7 +5,7 @@ from app.views.user import register, loginPage, logoutPage,  change_password
 from app.views.cart import *
 from app.views.account import  meal_plan_view,my_account
 from app.views.misc import redeem_points
-from app.views.sales_chart import sales_chart
+from app.views.admin_dashboard import sales_dashboard
 
 urlpatterns = [
     path('', home, name='home'),
@@ -30,5 +30,5 @@ urlpatterns = [
     path('category/', category, name='category'),
     path('meal_plan_view/', meal_plan_view, name='meal_plan_view'),
     path('meal_plan_view/', meal_plan_view, name='meal_plan_view'),
-    path('sales_chart/', sales_chart, name='sales_chart'),
+    path('dashboard/', sales_dashboard, name='admin_dashboard'),
 ]

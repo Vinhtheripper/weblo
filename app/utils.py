@@ -10,6 +10,7 @@ from django.conf import settings
 from email.mime.image import MIMEImage
 from django.core.mail import get_connection
 from .models import ShippingAddress
+from num2words import num2words
 
 
 def truncate_text(text, max_length=30):
@@ -26,16 +27,22 @@ def generate_invoice(order):
     c = canvas.Canvas(pdf_path, pagesize=letter)
     c.setFont("Helvetica-Bold", 14)
 
-    c.drawCentredString(300, 770, "SALES INVOICE")
-    c.setFont("Helvetica", 12)
-    c.drawString(100, 750, "Store Name: DelisoraCompany")
-    c.drawString(100, 730, "Address: 669 Do Muoi, Area 6, Thu Duc, Ho Chi Minh City")
-    c.drawString(100, 710, "Phone Number: +84919694180")
+    logo_path = os.path.join(settings.BASE_DIR, "app/static/app/images/logocrop.png")
+    if os.path.exists(logo_path):
+        c.drawImage(logo_path, 272, 740, width=50, height=50, mask='auto')
 
-    c.drawString(100, 680, f"Customer Name: {order.customer.user.get_full_name() if order.customer else 'Anonymous'}")
+    c.drawCentredString(300, 725, "E-INVOICE")
+    c.setFont("Helvetica", 13)
+    c.drawString(100, 710, "Store Name: DelisoraCompany")
+    c.drawString(100, 670, "Address: 669 Do Muoi, Area 6, Thu Duc, Ho Chi Minh City")
+    c.drawString(100, 690, "Phone Number: +84919694180")
+    c.drawString(400, 710, f"Invoice No: {order.id}")
+    c.drawString(400, 690, f"Date: {order.date_order.strftime('%d-%m-%Y')}")
+
+    c.drawString(100, 650, f"Customer Name: {order.customer.user.get_full_name() if order.customer else 'Anonymous'}")
 
     shipping_address = ShippingAddress.objects.filter(customer=order.customer).order_by('-date_added').first()
-    c.drawString(100, 660, f"Address: {shipping_address.address if shipping_address else 'N/A'}")
+    c.drawString(100, 630, f"Customer Address: {shipping_address.address if shipping_address else 'N/A'}")
 
     # Tạo bảng dữ liệu
     data = [["NO", "NAME", "QUANTITY", "ORIGINAL PRICE", "SALE PRICE", "TOTAL AMOUNT"]]
@@ -64,6 +71,9 @@ def generate_invoice(order):
     # Thêm hàng giảm giá
     data.append(["", "Sale Discount", "", "", "", f"- {order.get_sale_discount_total} $"])
     data.append(["", "Endow Discount", "", "", "", f"- {order.get_endow_discount_total} $"])
+    data.append(["", "Total", "", "", "", f" {order.get_cart_total} $"])
+
+
 
     # Vẽ bảng
     table = Table(data, colWidths=[50, 200, 80, 100, 100, 100])  # Tăng cột "NAME" lên 200px
@@ -82,9 +92,10 @@ def generate_invoice(order):
     table_x = (page_width - table_width) / 2
     table.drawOn(c, table_x, 500)
 
-    # Tổng tiền
-    c.setFont("Helvetica-Bold", 12)
-    c.drawRightString(500, 460, f"TOTAL: {order.get_cart_total} $")
+    total_price = order.get_cart_total
+    c.setFont("Helvetica-Bold", 13)
+    c.drawString(150, 470, f"Amount in words: {num2words(total_price, lang='en').capitalize()} dollars")
+
 
     c.drawString(100, 420, "CUSTOMER")
     c.drawString(400, 420, "VENDOR")
@@ -94,25 +105,29 @@ def generate_invoice(order):
 
 
 def send_invoice_email(customer_email, pdf_path, order):
-    """Gửi email hóa đơn với logo hiển thị đúng"""
-    logo_path = os.path.join(settings.BASE_DIR, "app/static/app/images/anhqq.png")
+    """Gửi email hóa đơn với logo hiển thị đúng và nội dung chuyên nghiệp hơn."""
 
-    subject = f"[Delisora] Confirm your order #{order.id}."
+    logo_path = os.path.join(settings.BASE_DIR, "app/static/app/images/logocrop.png")
+    customer_name = order.customer.user.get_full_name() if order.customer else "Valued Customer"
+
+    subject = f"[Delisora] Your order #{order.id} has been confirmed!"
     message = format_html(
         """
         <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px; max-width: 600px; text-align: center; margin: auto;">
             <div>
                 <img src="cid:delisora_logo" alt="Delisora Logo" style="width: 150px;"/>
-                <h2 style="color: #4CAF50; text-align: center;">Thanks for your order!</h2>
+                <h2 style="color: #4CAF50;">Thank You for Your Order!</h2>
             </div>
-            <p style="text-align: left;">Hello <strong>{}</strong>,</p>
-            <p style="text-align: left;">Your order has been confirmed. A detailed invoice is attached.</p>
-            <p style="text-align: left;">Thank you for trusting Delisora!</p>
+            <p style="text-align: left;">Dear <strong>{}</strong>,</p>
+            <p style="text-align: left;">We are pleased to inform you that your order has been successfully confirmed. 
+            Please find your detailed invoice attached.</p>
+            <p style="text-align: left;">We appreciate your trust in Delisora and look forward to serving you again!</p>
             <p style="text-align: left;"><strong>Hotline:</strong> +84919694180</p>
         </div>
-        """.format(order.customer.user.get_full_name() if order.customer else "Dear Customer")
+        """.format(customer_name)
     )
 
+    # Cấu hình kết nối email
     connection = get_connection(
         host=settings.EMAIL_HOST,
         port=settings.EMAIL_PORT,
@@ -126,7 +141,7 @@ def send_invoice_email(customer_email, pdf_path, order):
     email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [customer_email], connection=connection)
     email.content_subtype = "html"
 
-
+    # Đính kèm logo nếu tồn tại
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as img:
             logo = MIMEImage(img.read())
@@ -135,7 +150,7 @@ def send_invoice_email(customer_email, pdf_path, order):
             logo.add_header("Content-Type", "image/png")
             email.attach(logo)
 
-
+    # Đính kèm hóa đơn PDF nếu tồn tại
     if os.path.exists(pdf_path):
         with open(pdf_path, "rb") as pdf:
             email.attach(f"invoice_{order.id}.pdf", pdf.read(), "application/pdf")

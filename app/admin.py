@@ -2,6 +2,9 @@ from .models import *
 from django.contrib import admin
 from django.contrib import messages
 from .utils import generate_invoice, send_invoice_email
+from django.urls import reverse
+from django.utils.html import format_html
+from app.views.admin_dashboard import sales_dashboard
 
 
 admin.site.register(Category)
@@ -44,4 +47,28 @@ class OrderAdmin(admin.ModelAdmin):
                 self.message_user(request, f"❌ Order {order.id} has been paid before", messages.ERROR)
 
     mark_as_paid.short_description = "Confirm payment & send invoice"
+
+
+
+
+class CustomAdminSite(admin.AdminSite):
+    site_header = "Quản lý Bán Hàng"
+    site_title = "Admin Panel"
+    index_title = "Chào mừng đến với Admin Dashboard"
+
+    def get_urls(self):
+        from django.urls import path
+        urls = super().get_urls()
+        custom_urls = [
+            path('dashboard/', self.admin_view(sales_dashboard), name='admin_dashboard'),
+        ]
+        return custom_urls + urls
+
+    def dashboard_link(self):
+        """Tạo nút xem Dashboard"""
+        url = reverse('admin_dashboard')
+        return format_html(f'<a href="{url}" class="button" style="display:block; padding:10px; margin:10px 0; background:#3498db; color:#fff; text-align:center; border-radius:5px; text-decoration:none;">📊 Xem Dashboard</a>')
+
+admin_site = CustomAdminSite(name="quangvinh")
+
 

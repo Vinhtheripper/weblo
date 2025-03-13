@@ -11,7 +11,7 @@ from django.db.models import Count
 from app.models import Order
 
 
-def sales_chart(request):
+def sales_dashboard(request):
     try:
         # 🛠️ Lấy dữ liệu từ DB
         orders = Order.objects.values('date_order__date').annotate(total=Count('id'))
@@ -50,8 +50,8 @@ def sales_chart(request):
         sales_chart = base64.b64encode(buffer.getvalue()).decode()
         buffer.close()
 
-        return render(request, 'app/sales_chart.html', {'sales_chart': sales_chart})
+        return render(request, 'app/dashboard.html', {'sales_chart': sales_chart})
 
     except Exception as e:
         print("❌ Lỗi xảy ra:", e)
-        return render(request, 'app/sales_chart.html', {'sales_chart': None, 'error': str(e)})
+        return render(request, 'app/dashboard.html', {'sales_chart': None, 'error': str(e)})
