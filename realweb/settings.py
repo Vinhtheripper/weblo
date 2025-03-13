@@ -109,6 +109,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://weblo-port8000.up.railway.app",
+    "http://weblo-port8000.up.railway.app",
+    "http://127.0.0.1",
+    "http://localhost",
+    "https://127.0.0.1",
+    "https://localhost",
 ]
 
 
