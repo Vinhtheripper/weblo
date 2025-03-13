@@ -138,8 +138,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #trỏ admin về static(quan trọng)
 
 MEDIA_URL = '/images/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+MEDIA_ROOT=os.path.join(BASE_DIR,'app/static/images')
 
 SESSION_COOKIE_NAME = 'user_sessionid'
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
