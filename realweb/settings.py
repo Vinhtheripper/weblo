@@ -107,6 +107,11 @@ AUTH_PASSWORD_VALIDATORS = [
     #},
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://weblo-port8000.up.railway.app",
+]
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
