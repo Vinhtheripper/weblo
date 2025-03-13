@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-q!6d1-0%qe#tlwevq6!ac73g$8yf0j5d8j^6si1*7n32l0(h@4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['weblo-port8000.up.railway.app', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = []
 
 
 
@@ -106,17 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
       #   'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     #},
 ]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://weblo-port8000.up.railway.app",
-    "http://weblo-port8000.up.railway.app",
-    "http://127.0.0.1",
-    "http://localhost",
-    "https://127.0.0.1",
-    "https://localhost",
-]
-
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

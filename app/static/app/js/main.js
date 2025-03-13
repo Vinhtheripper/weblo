@@ -203,3 +203,25 @@ function validatePaymentMethod() {
     return true;
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+  const swup = new Swup();
+  swup.hooks.on('contentReplaced', function() {
+    console.log("Nội dung trang đã thay đổi, khởi động lại script...");
+    initSearchFunction();
+  });
+
+  function initSearchFunction() {
+    const searchBtn = document.getElementById("openSearch");
+    const overlay = document.getElementById("overlay");
+
+    if (searchBtn) {
+      searchBtn.addEventListener("click", function () {
+        overlay.style.display = "block";
+      });
+    }
+  }
+
+  initSearchFunction();  // Chạy lần đầu khi load trang
+});
+
+
