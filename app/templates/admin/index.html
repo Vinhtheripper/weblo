@@ -4,9 +4,11 @@
     <h1>Quản lý Bán Hàng</h1>
 
     <!-- Thêm nút Dashboard -->
-    <a href="{% url 'admin_dashboard' %}" class="button" style="display:block; padding:10px; margin:10px 0; background:#3498db; color:#fff; text-align:center; border-radius:5px; text-decoration:none; font-weight:bold;">
+
+    <a href="{% url 'admin_dashboard' %}" class="button" style="display:block; padding:10px; margin:10px 0; background:#373d37; color:#fff; text-align:center; border-radius:5px; text-decoration:none; font-weight:bold;">
         📊 Xem Dashboard
     </a>
+    {{ block.super }}
 
-    {{ block.super }}  <!-- Hiển thị nội dung mặc định của Django Admin -->
+      <!-- Hiển thị nội dung mặc định của Django Admin -->
 {% endblock %}

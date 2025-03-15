@@ -101,7 +101,6 @@ class Product(BaseProduct):
     protein = models.FloatField(default=0)
     carbs = models.FloatField(default=0)
     fat = models.FloatField(default=0)
-
     sale = models.BooleanField(default=False)
     discount_percentage = models.FloatField(default=0, null=True, blank=True)
     sale_price = models.FloatField(default=0, null=True, blank=True)

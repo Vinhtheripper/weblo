@@ -25,10 +25,18 @@
     </div>
   </div>
 
-  <a href="{% url 'login' %}" class="location">
-    <span><i class="ri-map-pin-2-fill"></i></span>
-    REGISTER HERE!
-  </a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'aboutus' %}" class="location">
+      <span><i class="ri-information-fill"></i></span>
+      ABOUT US
+    </a>
+  {% else %}
+    <a href="{% url 'login' %}" class="location">
+      <span><i class="ri-map-pin-2-fill"></i></span>
+      REGISTER HERE!
+    </a>
+  {% endif %}
+
 
 
 </div>
