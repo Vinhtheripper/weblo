@@ -63,14 +63,30 @@ def update_profile(request, customer):
 
 
 def track_weight(request, customer):
-    """Theo dõi cân nặng"""
     try:
         height = float(request.POST.get("height", 0))
         weight = float(request.POST.get("weight", 0))
         if height > 0 and weight > 0:
             bmi = round(weight / ((height / 100) ** 2), 2)
-            WeightTracking.objects.create(customer=customer, height=height, weight=weight, bmi=bmi)
-            messages.success(request, "Cập nhật cân nặng thành công!")
+
+            # Xác định đánh giá sức khỏe dựa trên BMI
+            if bmi < 18.5:
+                health_status = "Underweight"
+            elif 18.5 <= bmi < 24.9:
+                health_status = "Normal"
+            elif 25 <= bmi < 29.9:
+                health_status = "Overweight"
+            else:
+                health_status = "Obesity"
+
+            WeightTracking.objects.create(
+                customer=customer,
+                height=height,
+                weight=weight,
+                bmi=bmi,
+                health_status=health_status
+            )
+            messages.success(request, f"Cập nhật cân nặng thành công! Đánh giá sức khỏe: {health_status}")
         else:
             messages.error(request, "Chiều cao và cân nặng phải lớn hơn 0!")
     except ValueError:

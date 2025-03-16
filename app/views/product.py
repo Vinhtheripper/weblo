@@ -8,16 +8,15 @@ def menu(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
 
-        # Lấy BMI gần nhất của khách hàng
+
         latest_tracking = WeightTracking.objects.filter(customer=customer, height__gte=100, weight__gte=10).order_by('-date', '-id').first()
 
         recommended_products = []
 
         if latest_tracking:
             bmi = latest_tracking.bmi
-            print(f"User: {customer}, BMI: {bmi}")  # Debug BMI
+            print(f"User: {customer}, BMI: {bmi}")
 
-            # Debug: In toàn bộ sản phẩm và calories
             all_products = Product.objects.all()
             for p in all_products:
                 print(f"Product: {p.name}, Calories: {p.calories}")

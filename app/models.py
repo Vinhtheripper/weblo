@@ -314,6 +314,7 @@ class WeightTracking(models.Model):
     height = models.FloatField()
     weight = models.FloatField()
     bmi = models.FloatField()
+    health_status = models.CharField(max_length=50, default="Not rated yet")
 
     def __str__(self):
         return f"{self.customer.name} - {self.date} (BMI: {self.bmi})"
