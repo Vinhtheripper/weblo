@@ -1,8 +1,68 @@
- <h2>Sales Dashboard</h2>
-    <h3>Daily Sales Trend</h3>
-    {% if sales_chart %}
-        <img src="data:image/png;base64,{{ sales_chart }}" alt="Sales Chart">
-    {% else %}
-        <p>No Sales Data Available.</p>
-    {% endif %}
+<h2>Sales Dashboard</h2>
 
+<div class="charts-container">
+    <div class="chart">
+        <h3>Daily Sales Trend</h3>
+        {% if sales_chart %}
+            <img src="data:image/png;base64,{{ sales_chart }}" alt="Sales Chart">
+        {% else %}
+            <p>No Sales Data Available.</p>
+        {% endif %}
+    </div>
+
+    <div class="chart">
+        <h3>Top 4 Most Purchased Items</h3>
+        {% if top_items_chart %}
+            <img src="data:image/png;base64,{{ top_items_chart }}" alt="Top Items Chart">
+        {% else %}
+            <p>No Data Available for Top Items.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="charts-container">
+    <div class="chart">
+        <h3>Customer Purchase Distribution</h3>
+        {% if customer_distribution_chart %}
+            <img src="data:image/png;base64,{{ customer_distribution_chart }}" alt="Customer Distribution Chart">
+        {% else %}
+            <p>No Data Available for Customer Distribution.</p>
+        {% endif %}
+    </div>
+
+    <div class="chart">
+        <h3>Product Category Sales</h3>
+        {% if category_sales_chart %}
+            <img src="data:image/png;base64,{{ category_sales_chart }}" alt="Category Sales Chart">
+        {% else %}
+            <p>No category sales data available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .charts-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px; /* Tạo khoảng cách giữa các biểu đồ */
+}
+
+.chart {
+    flex: 1; /* Giúp các biểu đồ tự giãn theo không gian */
+    min-width: 45%; /* Đảm bảo ít nhất 2 chart trên một hàng */
+    max-width: 48%; /* Giới hạn kích thước để không bị chồng lên nhau */
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 15px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: 8px;
+}
+
+img {
+    width: 100%; /* Đảm bảo ảnh hiển thị đầy đủ trong container */
+    height: auto;
+}
+
+</style>

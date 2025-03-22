@@ -235,9 +235,6 @@ class OrderItem(models.Model):
             return self.product.final_price * self.quantity
         return 0
 
-
-
-
 class MealPlan(models.Model):
     WEEKDAYS = [
         ('Monday', 'Monday'),

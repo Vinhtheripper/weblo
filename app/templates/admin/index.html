@@ -1,14 +1,21 @@
 {% extends "admin/index.html" %}
 
 {% block content %}
-    <h1>Quản lý Bán Hàng</h1>
-
-    <!-- Thêm nút Dashboard -->
-
-    <a href="{% url 'admin_dashboard' %}" class="button" style="display:block; padding:10px; margin:10px 0; background:#373d37; color:#fff; text-align:center; border-radius:5px; text-decoration:none; font-weight:bold;">
-        📊 Xem Dashboard
-    </a>
     {{ block.super }}
 
-      <!-- Hiển thị nội dung mặc định của Django Admin -->
+    <div style="margin-top: 20px;">
+        <a href="{% url 'admin_dashboard' %}" class="button"
+           style="display:inline-block; padding:10px 20px; margin:10px;
+                  background:#3498db; color:#fff; text-align:center;
+                  border-radius:5px; text-decoration:none;">
+            📊 Dashboard
+        </a>
+
+        <a href="{% url 'quangvinh:export_excel' %}" class="button"
+           style="display:inline-block; padding:10px 20px; margin:10px;
+                  background:#2ecc71; color:#fff; text-align:center;
+                  border-radius:5px; text-decoration:none;">
+            📥 Excel
+        </a>
+    </div>
 {% endblock %}
