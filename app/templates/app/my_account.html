@@ -269,9 +269,24 @@
                     </div>
                 </div>
             </div>
+
 <script>
-    let productCategories = {{ product_categories|safe }};
+    var productCategories = [
+        {% for category in product_categories %}
+        {
+            name: "{{ category.name }}",
+            products: [
+                {% for product in category.products.all %}
+                { id: "{{ product.id }}", name: "{{ product.name }}", calories: "{{ product.calories }}" },
+                {% endfor %}
+            ]
+        },
+        {% endfor %}
+    ];
 </script>
+
+
+
 <script src="{% static 'app/js/my_account.js' %}" defer></script>
 {% endblock %}
 

@@ -1,23 +1,27 @@
+const mealPlanKey = "userMealPlan";
 document.addEventListener("DOMContentLoaded", function () {
     // Kích hoạt tab menu
     let tabLinks = document.querySelectorAll('.account-settings-links a');
     tabLinks.forEach(function (tab) {
         tab.addEventListener("click", function (e) {
             e.preventDefault();
-            document.querySelector('.account-settings-links .active').classList.remove("active");
-            document.querySelector('.tab-pane.active').classList.remove("active", "show");
+            let activeLink = document.querySelector('.account-settings-links .active');
+            if (activeLink) activeLink.classList.remove("active");
+
+            let activePane = document.querySelector('.tab-pane.active');
+            if (activePane) activePane.classList.remove("active", "show");
+
             this.classList.add("active");
-            document.querySelector(this.getAttribute("href")).classList.add("active", "show");
+            let targetPane = document.querySelector(this.getAttribute("href"));
+            if (targetPane) targetPane.classList.add("active", "show");
         });
     });
-    // Load lại dữ liệu đã lưu
-    loadSavedMeals();
+// Load lại dữ liệu đã lưu
+    loadSavedMeals(mealPlanKey);
 });
 
-function saveMeals(day, mealType) {
-    let username = document.getElementById("current-username").textContent; // Lấy username từ HTML
-    if (!username) return; // Nếu không có username, không lưu
 
+function saveMeals(day, mealType) {
     let selects = document.querySelectorAll(`#meal-container-${day}-${mealType} select`);
     let selectedMeals = [];
 
@@ -27,31 +31,36 @@ function saveMeals(day, mealType) {
         }
     });
 
-    let mealPlanKey = `mealPlan_${username}`;
-    let mealPlan = JSON.parse(localStorage.getItem(mealPlanKey)) || {};
+    console.log(`🛠 [DEBUG] Saving ${mealType} for ${day}:`, selectedMeals);
 
+
+
+    let mealPlan = JSON.parse(localStorage.getItem(mealPlanKey)) || {};
     if (!mealPlan[day]) {
         mealPlan[day] = {};
     }
     mealPlan[day][mealType] = selectedMeals;
-    localStorage.setItem(mealPlanKey, JSON.stringify(mealPlan));
 
-    updateMealDisplay(day, mealType);
+    localStorage.setItem(mealPlanKey, JSON.stringify(mealPlan));
+    console.log(`📁 [DEBUG] localStorage updated:`, localStorage.getItem(mealPlanKey));
+
+    updateMealDisplay(day, mealType, mealPlanKey);
 }
+
+
 // Hiển thị danh sách món đã chọn
-function updateMealDisplay(day, mealType) {
-    let mealPlan = JSON.parse(localStorage.getItem("mealPlan")) || {};
+function updateMealDisplay(day, mealType, mealPlanKey) {
+    let mealPlan = JSON.parse(localStorage.getItem(mealPlanKey)) || {};
     let selectedMeals = mealPlan[day] && mealPlan[day][mealType] ? mealPlan[day][mealType] : [];
     let displayElement = document.getElementById(`selected-meals-${day}-${mealType}`);
-    displayElement.textContent = selectedMeals.length > 0 ? "Món đã chọn: " + selectedMeals.join(", ") : "Chưa có món";
+
+    if (displayElement) {
+        displayElement.textContent = selectedMeals.length > 0 ?  selectedMeals.join(", ") : "Chưa có món";
+    }
 }
 
 // Load dữ liệu đã lưu sau khi refresh
-function loadSavedMeals() {
-    let username = document.getElementById("current-username").textContent;
-    if (!username) return;
-
-    let mealPlanKey = `mealPlan_${username}`;
+function loadSavedMeals(mealPlanKey) {
     let mealPlan = JSON.parse(localStorage.getItem(mealPlanKey)) || {};
 
     for (let day in mealPlan) {
@@ -59,27 +68,38 @@ function loadSavedMeals() {
             mealPlan[day][mealType].forEach(mealId => {
                 addMealSelect(day, mealType, mealId);
             });
-            updateMealDisplay(day, mealType);
+            updateMealDisplay(day, mealType, mealPlanKey);
         }
     }
 }
 
-// Thêm dropdown chọn món ăn
+
 function addMealSelect(day, mealType, selectedValue = "") {
     let container = document.getElementById(`meal-container-${day}-${mealType}`);
+    if (!container) {
+        console.error("Không tìm thấy container:", `meal-container-${day}-${mealType}`);
+        return;
+    }
 
     let newSelect = document.createElement("div");
     newSelect.classList.add("meal-select");
 
     let selectHTML = `<select name="meal_${day}_${mealType}" required><option value="">Chọn món</option>`;
 
+    if (!Array.isArray(productCategories)) {
+        console.error("Dữ liệu productCategories không hợp lệ:", productCategories);
+        return;
+    }
+
     productCategories.forEach(category => {
         selectHTML += `<optgroup label="${category.name}">`;
-        category.products.forEach(product => {
-            selectHTML += `<option value="${product.id}" ${selectedValue == product.id ? "selected" : ""}>
-                            ${product.name} (${product.calories} kcal)
-                          </option>`;
-        });
+        if (Array.isArray(category.products)) {
+            category.products.forEach(product => {
+                selectHTML += `<option value="${product.id}" ${selectedValue == product.id ? "selected" : ""}>
+                                ${product.name} (${product.calories} kcal)
+                              </option>`;
+            });
+        }
         selectHTML += `</optgroup>`;
     });
 
