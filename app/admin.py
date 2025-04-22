@@ -12,10 +12,14 @@ from .utils import generate_invoice, send_invoice_email
 from app.views.admin_dashboard import sales_dashboard
 
 
-models = [Category, Product, OrderItem, ShippingAddress, Customer,
+
+models = [Category, OrderItem, ShippingAddress, Customer,
           CustomerMessage, Combo, ComboItem, WeightTracking, MealPlan, GuestOrder]
 for model in models:
     admin.site.register(model)
+
+
+
 
 
 @admin.register(Order)
@@ -109,3 +113,16 @@ for model in models:
     admin_site.register(model)
 
 admin_site.register(Order, OrderAdmin)
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 3
+    max_num = 10
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'sale')
+    list_filter = ('sale',)
+    search_fields = ('name',)
+    inlines = [ProductImageInline]
+
+admin_site.register(Product, ProductAdmin)

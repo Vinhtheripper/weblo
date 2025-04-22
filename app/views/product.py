@@ -43,6 +43,7 @@ def menu(request):
     products = Product.objects.filter(digital=True)
     on_sale_products = Product.objects.filter(sale=True)
     combos = Combo.objects.all()
+    new_products = Product.objects.filter(created_at__gte=datetime.now() - timedelta(days=7))
 
     context = {
         'products_all': products_all,
@@ -53,6 +54,7 @@ def menu(request):
         'cartItems': cartItems,
         'categories': categories,
         'recommended_products': recommended_products,
+        'new_products': new_products,
     }
     return render(request, 'app/menu.html', context)
 
@@ -74,10 +76,12 @@ def product_detail(request):
     products = Product.objects.filter(id=id) if id else Product.objects.none()
     products_all = Product.objects.all()
 
+
     product = products.first() if products.exists() else None
     is_on_sale = product.sale if product else False
     original_price = product.price if product else 0
     discounted_price = product.final_price if product else 0
+    product_images = product.images.all() if product else []
 
     context = {
         'items': items,
@@ -90,6 +94,7 @@ def product_detail(request):
         'is_on_sale': is_on_sale,
         'original_price': original_price,
         'discounted_price': discounted_price,
+        'product_images': product_images,
     }
     return render(request, 'app/detail.html', context)
 

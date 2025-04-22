@@ -11,10 +11,20 @@
                         <div class="card">
                             <div class="row">
                                 <div class="col-md-6 d-flex align-items-center justify-content-center">
-                                    <div class="images p-3">
-                                        <img id="main-image" src="{{ i.imageURL }}" class="img-fluid" />
+                                    <div class="images p-3 text-center">
+                                        <!-- Ảnh Chính -->
+                                        <img id="main-image" src="{{ i.imageURL }}" class="img-fluid main-img" />
+
+                                        <!-- Ảnh Phụ -->
+                                        <div class="d-flex justify-content-center mt-3 thumbnails-container">
+                                            {% for image in i.product_images.all|slice:":3" %}
+                                                <img src="{{ image.imageURL }}" class="thumbnail-img mx-1"
+                                                     onclick="changeMainImage(this)">
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
+
 
                                 <div class="col-md-6">
                                     <div class="product p-4">
@@ -129,6 +139,21 @@
         </div>
     </div>
 </div>
+<style>
+    .thumbnails-container {
+    max-width: 100%;
+    overflow: hidden;
+    gap: 5px; /* Khoảng cách giữa các ảnh */
+}
 
+.thumbnail-img {
+    transition: transform 0.2s ease-in-out;
+}
+
+.thumbnail-img:hover {
+    transform: scale(1.1); /* Hiệu ứng zoom nhẹ khi hover */
+}
+
+</style>
 
 {% endblock content %}

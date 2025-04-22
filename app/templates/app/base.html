@@ -71,19 +71,20 @@
           {% if user.is_authenticated %}
           <div class="dropdown">
               <button class="btn p-0 border-0 position-relative" type="button" id="userDropdown" data-bs-toggle="dropdown">
-                <img src="{{ request.user.customer.imageURL|default:'https://bootdey.com/img/Content/avatar/avatar1.png' }}"
-                     alt="Avatar" class="rounded-circle" width="40" height="40">
+                    <img src="{{ request.user.customer.imageURL|default:'https://bootdey.com/img/Content/avatar/avatar1.png' }}"
+                         alt="Avatar" class="rounded-circle" width="40" height="40">
 
-                {% if request.user.customer.points >= 1 %}
-                  <span class="badge position-absolute bg-danger text-white"
-                        id="reward-notification"
-                        style="width: 18px; height: 18px; font-size: 12px; display: flex;
-                               align-items: center; justify-content: center;
-                               border-radius: 50%; top: -5px; right: -5px;">
-                    {{ request.user.customer.points }}
-                  </span>
-                {% endif %}
-              </button>
+                    {% if new_products.exists %}
+                      <span class="badge position-absolute bg-danger text-white animate-blink"
+                            id="new-product-notification"
+                            style="width: 18px; height: 18px; font-size: 12px; display: flex;
+                                   align-items: center; justify-content: center;
+                                   border-radius: 50%; top: -5px; right: -5px;">
+                        New!
+                      </span>
+                    {% endif %}
+                </button>
+
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{% url 'my_account' %}">My Account</a></li>
                 <li>
@@ -124,6 +125,15 @@
     </div>
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="{% static 'app/js/main.js' %}"></script>
+    <script>
+        @keyframes blink {
+          50% { opacity: 0; }
+        }
+        .animate-blink {
+          animation: blink 1s infinite;
+        }
+
+    </script>
   </body>
 
 </html>

@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from decimal import Decimal, ROUND_HALF_UP
 from django.utils.timezone import now
+from django.contrib.contenttypes.fields import GenericRelation
+from datetime import timedelta, datetime
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -82,6 +84,7 @@ class BaseProduct(models.Model):
     detail = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
+
     class Meta:
         abstract = True
 
@@ -104,6 +107,7 @@ class Product(BaseProduct):
     sale = models.BooleanField(default=False)
     discount_percentage = models.FloatField(default=0, null=True, blank=True)
     sale_price = models.FloatField(default=0, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True) #New attribute
 
     def __str__(self):
         return self.name
@@ -117,6 +121,25 @@ class Product(BaseProduct):
                 return Decimal(self.price) * (1 - Decimal(self.discount_percentage) / 100)
 
         return Decimal(self.price)
+
+    @property
+    def is_new(self):
+        return (datetime.now() - self.created_at).days < 7
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='product_images/')
+
+    def __str__(self):
+        return f"{self.product.name} - Image {self.id}"
+
+    @property
+    def imageURL(self):
+        try:
+            return self.image.url
+        except:
+            return ''
+
 
 
 class Combo(BaseProduct):
